@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c0fxo2oje5ddd" path="res://Scenes/player.tscn" id="2_ply"]
 [ext_resource type="PackedScene" uid="uid://ciykxhsa07xr6" path="res://Scenes/question_block.tscn" id="4_qb"]
 [ext_resource type="PackedScene" uid="uid://bcvm1ejxjohix" path="res://Scenes/hud.tscn" id="5_hud"]
+[ext_resource type="PackedScene" uid="uid://dl07o028rqawx" path="res://Scenes/enemy.tscn" id="6_enm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8w0r3"]
 size = Vector2(7.75, 48)
@@ -67,6 +68,30 @@ position = Vector2(1842, 432)
 position = Vector2(1938, 432)
 tipo = 1
 
+[node name="enemy_1" parent="." unique_id=1935269389 instance=ExtResource("6_enm")]
+position = Vector2(306, 512)
+
+[node name="enemy_2" parent="." unique_id=124326310 instance=ExtResource("6_enm")]
+position = Vector2(1100, 512)
+
+[node name="enemy_3" parent="." unique_id=235981312 instance=ExtResource("6_enm")]
+position = Vector2(529, 512)
+
+[node name="enemy_4" parent="." unique_id=1032199249 instance=ExtResource("6_enm")]
+position = Vector2(1441, 288)
+
+[node name="enemy_5" parent="." unique_id=147255551 instance=ExtResource("6_enm")]
+position = Vector2(1260, 287)
+
+[node name="enemy_6" parent="." unique_id=691514104 instance=ExtResource("6_enm")]
+position = Vector2(1841, 512)
+
+[node name="enemy_7" parent="." unique_id=1212900357 instance=ExtResource("6_enm")]
+position = Vector2(3251, 512)
+
+[node name="enemy_8" parent="." unique_id=1269546673 instance=ExtResource("6_enm")]
+position = Vector2(2542, 416)
+
 [node name="Final" type="Area2D" parent="." unique_id=576235645]
 scale = Vector2(4, 4)
 
@@ -83,15 +108,17 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -320.0
+offset_top = -40.0
+offset_right = 320.0
+offset_bottom = 40.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 80
 text = "YOU WIN"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Void" type="Area2D" parent="." unique_id=164815291]
 

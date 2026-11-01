@@ -30,6 +30,8 @@ var _tween_escala: Tween
 var _coyote := 0.0
 var _buffer := 0.0
 var _corriendo := false
+var _invulnerable := false
+var _muerto := false
 
 
 func _ready() -> void:
@@ -58,6 +60,11 @@ func _ajustar_limites_camara() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _muerto:
+		velocity.y = minf(velocity.y + gravedad_bajada * delta, caida_maxima)
+		move_and_slide()
+		return
+
 	var direccion := Input.get_axis("move_left", "move_right")
 	_corriendo = Input.is_action_pressed("correr")
 
@@ -67,11 +74,13 @@ func _physics_process(delta: float) -> void:
 
 	var estaba_en_suelo := is_on_floor()
 	var subiendo := velocity.y < 0.0
+	var cayendo := velocity.y > 0.0
 	move_and_slide()
 	if not estaba_en_suelo and is_on_floor():
 		_aterrizar()
 	if subiendo:
 		_golpear_bloques()
+	_interactuar_enemigos(cayendo)
 
 	_animar(direccion)
 
@@ -84,6 +93,60 @@ func _golpear_bloques() -> void:
 			var cuerpo := colision.get_collider()
 			if cuerpo and cuerpo.has_method("golpear_desde_abajo"):
 				cuerpo.golpear_desde_abajo()
+
+
+## Pisar un enemigo desde arriba lo aplasta y rebota; tocarlo de lado hace daño.
+func _interactuar_enemigos(cayendo: bool) -> void:
+	for i in get_slide_collision_count():
+		var colision := get_slide_collision(i)
+		var cuerpo := colision.get_collider()
+		if cuerpo == null or not cuerpo.has_method("pisar"):
+			continue
+		if cayendo and colision.get_normal().y < -0.7:
+			cuerpo.pisar()
+			velocity.y = -fuerza_salto * 0.62
+			_coyote = 0.0
+			_estirar(Vector2(0.85, 1.15), 0.08)
+		else:
+			recibir_golpe()
+
+
+## Daño: si eres super encoges y quedas invulnerable un momento; si no, mueres.
+func recibir_golpe() -> void:
+	if _invulnerable or _muerto:
+		return
+	if es_super:
+		perder_super()
+		_invulnerabilidad()
+	else:
+		_morir()
+
+
+func _invulnerabilidad() -> void:
+	_invulnerable = true
+	var tween := create_tween()
+	tween.set_loops(6)
+	tween.tween_property(_sprite, "modulate:a", 0.3, 0.12)
+	tween.tween_property(_sprite, "modulate:a", 1.0, 0.12)
+	await tween.finished
+	_sprite.modulate.a = 1.0
+	_invulnerable = false
+
+
+func _morir() -> void:
+	_muerto = true
+	set_collision_layer_value(1, false)
+	set_collision_mask_value(1, false)
+	velocity = Vector2(0.0, -420.0)
+	_estirar(Vector2(0.8, 1.2), 0.1)
+
+	# Espera a que termine el saltito y deja que el nivel muestre GAME OVER.
+	await get_tree().create_timer(1.0).timeout
+	var nivel := get_parent()
+	if nivel and nivel.has_method("game_over"):
+		nivel.game_over()
+	else:
+		util_func.change_scene("res://Scenes/level_scene.tscn")
 
 
 # ── Movimiento ────────────────────────────────────────────────────────
@@ -133,7 +196,7 @@ func _animar(direccion: float) -> void:
 	else:
 		anim = "idle_" + sufijo
 
-	if _sprite.animation != anim:
+	if _sprite.animation != anim or not _sprite.is_playing():
 		_sprite.play(anim)
 
 	if not is_on_floor():
@@ -156,7 +219,7 @@ func _configurar_animaciones() -> void:
 			frames.set_animation_speed(nombre, 10.0)
 	for nombre in ["walk_small", "walk_super"]:
 		if frames.has_animation(nombre):
-			frames.set_animation_speed(nombre, 8.0)
+			frames.set_animation_speed(nombre, 10.0)
 
 
 func _estirar(escala: Vector2, tiempo: float) -> void:
