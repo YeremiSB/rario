@@ -1,0 +1,83 @@
+[gd_scene format=3 uid="uid://blr5hgng3nw82"]
+
+[ext_resource type="Script" uid="uid://dwd1hp037y6km" path="res://Code/settings.gd" id="1_i44u3"]
+[ext_resource type="Shader" uid="uid://bfe7dhlkurhyg" path="res://Code/bg.gdshader" id="2_lhmql"]
+[ext_resource type="AudioStream" uid="uid://dlp20ve6dokio" path="res://Resources/Audio/menu_title.mp3" id="3_aaqfp"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8w0r3"]
+shader = ExtResource("2_lhmql")
+shader_parameter/color_a = Color(1, 0.47843137, 0.18039216, 1)
+shader_parameter/color_b = Color(1, 0.6329841, 0.4554808, 1)
+shader_parameter/color_c = Color(1, 0.4351316, 0.017771414, 1)
+shader_parameter/modo = 0
+shader_parameter/angulo = 225.9890107344775
+shader_parameter/centro = Vector2(0.5, 0.5)
+shader_parameter/repeticiones = 1.0
+shader_parameter/ping_pong = false
+shader_parameter/velocidad = 0.0
+shader_parameter/oscilacion = 0.05
+shader_parameter/brillo_banda = 0.2
+shader_parameter/banda_velocidad = 0.0
+shader_parameter/grano = 0.025
+shader_parameter/vineta = 0.15
+shader_parameter/alfa = 1.0
+
+[node name="Control" type="Control" unique_id=1055586177]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i44u3")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=493760767]
+material = SubResource("ShaderMaterial_8w0r3")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.6431373, 0.29411766, 1)
+
+[node name="back" type="Button" parent="." unique_id=783032557]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 16.0
+offset_right = 231.0
+offset_bottom = 71.0
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 24
+text = "Back to menu"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=734736465]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -215.5
+offset_top = -67.0
+offset_right = 215.5
+offset_bottom = 67.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=2064249112]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 30
+text = "VOLUME"
+
+[node name="HSlider" type="HSlider" parent="VBoxContainer" unique_id=1505047217]
+layout_mode = 2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=209545468]
+stream = ExtResource("3_aaqfp")
+volume_db = 10.0
+autoplay = true
+
+[connection signal="pressed" from="back" to="." method="_on_back_pressed"]
