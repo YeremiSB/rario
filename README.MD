@@ -2,6 +2,7 @@
 
 **Rario** is a **gamen't*** made for Cont.d
 
+Original by sbhack76-lgtm
 
 # changes
 ## Code
